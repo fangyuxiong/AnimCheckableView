@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AnimCheckableGroupView">
+        <attr name="acgv_style" format="reference"/>
+        <attr name="acgv_orientation" format="enum">
+            <enum name="vertical_down" value="1"/>
+            <enum name="vertical_up" value="2"/>
+            <enum name="horizontal_right" value="3"/>
+            <enum name="horizontal_left" value="4"/>
+        </attr>
+        <attr name="acgv_show_anim_duration" format="integer|reference"/>
+        <attr name="acgv_show_anim_delay" format="integer|reference"/>
+        <attr name="acgv_check_anim_duration" format="integer|reference"/>
+
+        <attr name="acgv_padding" format="dimension|reference"/>
+        <attr name="acgv_padding_top" format="dimension|reference"/>
+        <attr name="acgv_padding_left" format="dimension|reference"/>
+        <attr name="acgv_padding_right" format="dimension|reference"/>
+        <attr name="acgv_padding_bottom" format="dimension|reference"/>
+        <attr name="acgv_outside_width" format="reference|dimension"/>
+        <attr name="acgv_radius" format="dimension|reference"/>
+        <attr name="acgv_checked_radius" format="dimension|reference"/>
+        <attr name="acgv_color" format="color|reference"/>
+        <attr name="acgv_outside_color" format="color|reference"/>
+        <attr name="acgv_pressed_color" format="reference|color"/>
+        <attr name="acgv_draw_outside" format="boolean|reference"/>
+    </declare-styleable>
+</resources>

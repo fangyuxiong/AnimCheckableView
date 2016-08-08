@@ -30,61 +30,6 @@ import java.util.ArrayList;
 
 /**
  * Created by XiongFangyu on 16/7/25.
- *
- * usage:
- *
- * <pre>
- *     <com.immomo.momo.android.view.AnimCheckableGroupView
- *      android:layout_width="wrap_content"
- *      android:layout_height="wrap_content"
- *      app:acgv_style="@style/Anim_Checkable_Group_View_Style"/>
- *
- *      <style name="Anim_Checkable_Group_View_Style">
- *          <item name="acgv_orientation">vertical_down</item>
- *          <item name="acgv_show_anim_duration">700</item>
- *          <item name="acgv_show_anim_delay">100</item>
- *          <item name="acgv_check_anim_duration">500</item>
- *          <item name="acgv_outside_width">2dp</item>
- *          <item name="acgv_radius">15dp</item>
- *          <item name="acgv_padding">5dp</item>
- *          <item name="acgv_checked_radius">20dp</item>
- *          <item name="acgv_outside_color">#fff</item>
- *          <item name="acgv_draw_outside">true</item>
- *      </style>
- *
- *      private void initView(){
- *          animCheckableView = (AnimCheckableGroupView)findViewById(R.id.anim_checkable);
- *          animCheckableView.setChildCheckListener(new AnimCheckableGroupView.ChildCheckListener() {
- *              @Override
- *              public void onChecked(IAnimView v, boolean checked) {
- *                  Log.d("animview", "onChecked: "+v.getColor());
- *              }
- *          }
- *          int[] colors = new int[]{
- *              0XFFFF0000,
- *              0XFF00FF00,
- *              0XFF0000FF,
- *              0XFFFFFF00,
- *              0XFFFF00FF,
- *              0XFF00FFFF
- *          };
- *
- *          int[] pressColors = new int[]{
- *              0X9FFF0000,
- *              0X9F00FF00,
- *              0X9F0000FF,
- *              0X9FFFFF00,
- *              0X9FFF00FF,
- *              0X9F00FFFF
- *          };
- *          animCheckableView.addColors(colors,pressColors);
- *      }
- *
- *      private void onShowButtonClick(){
- *          animCheckableView.setVisibility(View.VISIBLE);
- *          //the same as : animCheckableView.setVisibility(View.VISIBLE,true);
- *      }
- * </pre>
  */
 public class AnimCheckableGroupView extends View {
 
@@ -247,10 +192,10 @@ public class AnimCheckableGroupView extends View {
 
     @Override
     protected void onMeasure(int w,int h){
-        isMeasure = true;
         final int childCount = children.size();
         if (childCount <= 0){
             super.onMeasure(w,h);
+            isMeasure = true;
             return;
         }
 
@@ -281,6 +226,7 @@ public class AnimCheckableGroupView extends View {
 
         setMeasuredDimension(finalWidth,finalHeight);
         layoutChildren();
+        isMeasure = true;
     }
 
     /**
@@ -348,6 +294,11 @@ public class AnimCheckableGroupView extends View {
                     allChildrenHeight = ct;
                     break;
             }
+            if (c.isChecked() && !isMeasure){
+                final int ncw = (int) (c.normalRadius * 2 + params.padding.left + params.padding.right);
+                final int nch = (int) (c.normalRadius * 2 + params.padding.top + params.padding.bottom);
+                c.layout(cl,ct,cl + ncw,ct + nch);
+            }
             c.layout(cl,ct,cl + cw, ct + ch);
         }
     }
@@ -362,6 +313,8 @@ public class AnimCheckableGroupView extends View {
     private int getRadiusWhenLayout(AnimCheckableView c){
         if (c.inCheckAnim)
             return (int) c.drawRadius;
+        else if (c.isChecked())
+            return (int) c.checkedRadius;
         else
             return (int) c.normalRadius;
     }
@@ -540,6 +493,9 @@ public class AnimCheckableGroupView extends View {
      * @param orientation {@link #VERTICAL_DOWN} {@link #VERTICAL_UP} {@link #HORIZONTAL_RIGHT} {@link #HORIZONTAL_LEFT}其中之一
      */
     public void setOrientation(@OrientationInt int orientation) {
+        if (orientation != this.orientation && checkedView != null){
+            checkedView.toggle(false);
+        }
         this.orientation = orientation;
         if (children.size() > 0 && isMeasure) {
             requestLayout();
@@ -760,7 +716,7 @@ public class AnimCheckableGroupView extends View {
 
         private Path clipPath;
 
-        private int oldOrientation;
+        int oldOrientation;
 
         AnimCheckableView(ParamsHolder params){
             if (params != null) {

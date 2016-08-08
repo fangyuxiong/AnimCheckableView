@@ -14,6 +14,12 @@ public class SuperOvershootInterpolator implements Interpolator {
     
     private double period;
 
+    private double what = -6;
+
+    public SuperOvershootInterpolator(){
+
+    }
+
     public SuperOvershootInterpolator(double amplitude, double period){
         this.amplitude = amplitude;
         this.period = period;
@@ -25,7 +31,7 @@ public class SuperOvershootInterpolator implements Interpolator {
 
         double pi2 = Math.PI * 2;
         double s = period / pi2 * Math.asin(1 / amplitude);
-        return (float) (amplitude * Math.pow(2, -6 * input) * Math.sin((input - s) * pi2 / period) + 1);
+        return (float) (amplitude * Math.pow(2, what * input) * Math.sin((input - s) * pi2 / period) + 1);
     }
 
     public void setAmplitude(double amplitude) {
@@ -34,5 +40,9 @@ public class SuperOvershootInterpolator implements Interpolator {
 
     public void setPeriod(double period) {
         this.period = period;
+    }
+
+    public void setWhat(double what) {
+        this.what = what;
     }
 }
